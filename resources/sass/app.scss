@@ -1,0 +1,57 @@
+// Fonts
+@import url('https://fonts.googleapis.com/css?family=Nunito');
+
+// Variables
+@import 'variables';
+
+// Bootstrap
+@import '~bootstrap/scss/bootstrap';
+@import 'Forum/css';
+@import 'Forum/custom';
+@import 'Forum/style';
+@import 'Forum/font-awesome.min';
+
+// Font-Awesome
+@import "~@fortawesome/fontawesome-free/scss/fontawesome";
+@import "~@fortawesome/fontawesome-free/scss/regular";
+@import "~@fortawesome/fontawesome-free/scss/solid";
+@import "~@fortawesome/fontawesome-free/scss/brands";
+
+$background: #f7f8f9;
+$text: #3a3c42;
+$primary: #061810;
+
+body{
+    background-color: $background;
+    color: $text;
+}
+
+h1{
+    margin-bottom: 30px;
+}
+
+.navbar{
+    background-color: $primary;
+    a{
+        color: #fff;
+    }
+
+    a:hover{
+        color: #7cec32;
+    }
+}
+
+.sub-nav{
+    background-color: #ffffff;
+    box-shadow: 0 5px 10px 0 rgba(204, 204, 204, 0.3);
+    margin-bottom: 40px;
+    a{
+        color: $primary;
+    }
+}
+
+
+.card{
+    box-shadow: 0 2px 4px rgba(204, 204, 204, 0.8);
+    padding: 20px 40px;
+}
