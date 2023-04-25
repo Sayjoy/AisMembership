@@ -1,29 +1,40 @@
 @extends('templates.main')
 
 @section('content')
-    <h1>Update profile</h1>
-    <form method="POST" action="{{route('user-profile-information.update')}}">
-        @csrf
-        @method("PUT")
+
+    <div class="row">
+        <div class="col-12">
+            <h1 class="btm_margin float-start">Your Profile</h1>
+            <a class="btn btn-sm btn-success float-end" href="{{route('user.profile.edit', $user->id)}}" role="Button">Edit</a>
+        </div>
+    </div>
+
+    <div class="card">
         <div class="mb-3">
-          <label for="name" class="form-label">name</label>
-          <input name="name" type="text" class="form-control @error('name') is-invalid @enderror" id="name" aria-describedby="name" value="{{ auth()->user()->name}}">
-          @error('name')
-            <span class="invalid-feedback" role="alert">
-                {{$message}}
-            </span>
-          @enderror
+            <strong for="name" class="form-label">name</strong>:
+            {{$user->name}}
         </div>
         <div class="mb-3">
-            <label for="email" class="form-label">email</label>
-            <input name="email" type="email" class="form-control @error('email') is-invalid @enderror" id="email" aria-describedby="email" value="{{ auth()->user()->email}}">
-            @error('email')
-                <span class="invalid-feedback" role="alert">
-                    {{$message}}
-                </span>
-            @enderror
+            <strong for="email" class="form-label">Email Address</strong>:
+            {{$user->email}}
         </div>
 
-        <button name="submit" type="submit" class="btn btn-primary">Submit</button>
-      </form>
+        <div class="mb-3">
+            <strong for="country" class="form-label">Country</strong>:
+            {{$user->country}}
+        </div>
+
+        <div class="mb-3">
+            <strong for="phone" class="form-label">Phone Number</strong>:
+            {{$user->phone}}
+        </div>
+
+        <div class="mb-3">
+            <strong for="phone" class="form-label">Role</strong>:
+            @foreach ($user->roles as $role)
+                {{$role->name}}
+            @endforeach
+        </div>
+    </div>
+
 @endsection

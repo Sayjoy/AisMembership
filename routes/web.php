@@ -1,6 +1,8 @@
 <?php
 
 use Admin\UserController;
+use User\ProfileController;
+use App\Models\Category;
 use User\Profile;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
@@ -24,7 +26,8 @@ Route::get('/', function () {
 
 //user related pages
 Route::prefix('users')->middleware(['auth', 'verified'])->name('user.')->group(function(){
-    Route::get('profile', Profile::class)->name('profile');
+    //Route::get('profile', Profile::class)->name('profile');
+    Route::resource('/profile', ProfileController::class);
 });
 
 
@@ -39,22 +42,30 @@ Route::get('/register-form', function (Request $request) {
     return view('auth.register', ['ipAddress'=>$request->ip()]);
 })->name('register-form')->middleware(['check.country']);
 
-//Route::post('/register-user', 'RegisterController@store')->name('register-user');
 
 //Policy protected routes for Admins and moderators only
 Route::prefix('policy')->name('policy.')->middleware(['auth', 'verified', 'auth.isAdmin.Moderator'])->group(function(){
-    Route::resource('/ideas', PolicyController::class)->except(['create', 'store']);
+    Route::resource('/ideas', PolicyController::class)->except(['create', 'store', 'show']);
     Route::post('/approval', 'PolicyController@approval')->name('approval');
+    Route::get('/publish/{policy_id}', 'PolicyController@publish')->name('publish');
+    Route::resource('/category', CategoryController::class);
+    Route::get('/bycategory/{category_id}', 'PolicyController@index')->name('byCategory');
 });
 
 //Policy protected routes for registered users only
+Route::get('/policy/{policy_id}', 'PolicyController@show')->middleware('auth')->name('policy.show');
+
 Route::prefix('discuss')->name('discuss.')->middleware('auth')->group(function(){
     Route::resource('/', DiscussionController::class);
+    Route::get('/bycategory/{category_id}', 'DiscussionController@byCategory')->name('byCategory');
 });
 
 //Policy open routes to the general public
 Route::get('/policy-ideas', 'PolicyController@create')->name('policy-ideas');
 Route::post('/policy-store', 'PolicyController@store')->name('policy.store');
+Route::get('/policies-published', 'PolicyController@publishedPolicies')->name('policies.published');
+Route::get('/policies-published/{category_id}', 'PolicyController@publishedPolicies')->name('policies.published.byCategory');
+Route::get('/policy-published/{policy_id}', 'PolicyController@showPublished')->name('policy.published');
 
 /*
 Route::get('send-mail', function () {

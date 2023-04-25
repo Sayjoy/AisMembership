@@ -21,24 +21,6 @@
   </div>
 
   <div class="mb-3">
-    <label for="country" class="form-label">Country</label>
-    <select name="country" class="form-control @error('country') is-invalid @enderror" id="country">
-        @foreach ($countries as $country)
-           <option value="{{ $country}}"
-            @if (old('country')==$country || isset($user->country)==$country)
-                selected
-            @endif
-            >{{$country}}</option>
-        @endforeach
-    </select>
-    @error('country')
-        <span class="invalid-feedback" role="alert">
-            {{$message}}
-        </span>
-    @enderror
-  </div>
-
-  <div class="mb-3">
     <label for="phone" class="form-label">Phone Number</label>
     <input name="phone" type="text" class="form-control @error('phone') is-invalid @enderror" id="phone" aria-describedby="phone"
             value="{{old('phone')}} @isset($user) {{ $user->phone}} @endisset">
@@ -83,6 +65,26 @@
         @enderror
         </div>
 @endisset  --}}
+@empty($profile)
+
+<div class="mb-3">
+    <label for="country" class="form-label">Country</label>
+    <select name="country" class="form-control @error('country') is-invalid @enderror" id="country">
+        @foreach ($countries as $country)
+           <option value="{{ $country}}"
+            @if (old('country')==$country || isset($user->country)==$country)
+                selected
+            @endif
+            >{{$country}}</option>
+        @endforeach
+    </select>
+    @error('country')
+        <span class="invalid-feedback" role="alert">
+            {{$message}}
+        </span>
+    @enderror
+  </div>
+
 <div class="mb-3">
     @foreach ($roles as $role)
         <div class="form-check">
@@ -92,11 +94,12 @@
                     @if (in_array($role->id, $user->roles->pluck('id')->toArray()))
                         checked
                     @endif
-                @endisset>
+                @endisset >
             <label class="form-check-label" for="{{$role->name}}">
                 {{$role->name}}
             </label>
         </div>
     @endforeach
 </div>
+@endempty
 <button name="submit" type="submit" class="btn btn-primary">Submit</button>

@@ -7,6 +7,7 @@ use App\Models\Policy;
 use App\Models\Category;
 use App\Http\Requests\StoreDiscussionRequest;
 use App\Http\Requests\UpdateDiscussionRequest;
+use Illuminate\Support\Facades\Auth;
 
 class DiscussionController extends Controller
 {
@@ -17,11 +18,26 @@ class DiscussionController extends Controller
      */
     public function index()
     {
-        $approvedIdeas = Policy::where('approval', true)->paginate(10);
+        $approvedIdeas = Policy::where('approval', true)->whereNull('published_at')->paginate(10);
         $categories = Category::all();
         return view('policy.discussion', [
             'approvedIdeas' => $approvedIdeas,
             'categories' => $categories
+        ]);
+    }
+
+    public function byCategory($category_id)
+    {
+        $category = Category::findOrFail($category_id);
+        $approvedIdeas = $category->policies()
+                                ->where('approval', true)
+                                ->whereNull('published_at')
+                                ->paginate(10);
+        $categories = Category::all();
+        return view('policy.discussion', [
+            'approvedIdeas' => $approvedIdeas,
+            'categories' => $categories,
+            'category' =>$category
         ]);
     }
 
@@ -43,7 +59,13 @@ class DiscussionController extends Controller
      */
     public function store(StoreDiscussionRequest $request)
     {
-        //
+        Discussion::create(array_merge(
+            $request->all(),
+            ['user_id' => Auth::id()]
+        ));
+
+        $request->session()->flash('success', 'Reply successful');
+        return back();
     }
 
     /**

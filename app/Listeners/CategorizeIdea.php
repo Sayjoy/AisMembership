@@ -24,7 +24,7 @@ class CategorizeIdea
      * @param  \App\Events\NewPolicyIdeaSubmitted  $event
      * @return void
      */
-    public function handle(NewPolicyIdeaSubmitted $event)
+    public function handle($event)
     {
         $event->policy->categories()->sync($event->categories);
     }

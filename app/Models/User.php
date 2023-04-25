@@ -64,6 +64,14 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany('App\Models\Policy', 'approver_id');
     }
 
+    public function policyPublisher(){
+        return $this->hasMany('App\Models\Policy', 'publisher_id');
+    }
+
+    public function discussion(){
+        return $this->hasMany('App\Models\Discussion');
+    }
+
     /*
     *Check if the user has a role
     *@param string $role

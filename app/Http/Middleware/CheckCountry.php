@@ -30,7 +30,7 @@ class CheckCountry
 
         //$ip = $request->ip(); /* Dynamic IP address- uncomment in production site */
         $ip = '48.188.144.248'; /* 'US' Static IP address comment out in production site */
-        //$ip = '102.88.34.154'; /* 'Nigerian' Static IP address comment out in production site */
+        //$ip = '102.89.34.58'; /* 'Nigerian' Static IP address comment out in production site */
 
         $currentUserInfo = Location::get($ip);
 

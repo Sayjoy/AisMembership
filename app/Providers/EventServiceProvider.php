@@ -8,6 +8,7 @@ use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvi
 use Illuminate\Support\Facades\Event;
 use App\Events\NewUserCreated;
 use App\Events\NewPolicyIdeaSubmitted;
+use App\Events\PolicyIdeaUpdated;
 use App\Listeners\AssignRoles;
 use App\Listeners\CategorizeIdea;
 use App\Listeners\SendEmailNotificationToIdeaOwner;
@@ -32,8 +33,10 @@ class EventServiceProvider extends ServiceProvider
             SendEmailNotificationToIdeaOwner::class,
             SendEmailNotificationToModerators::class,
         ],
+        PolicyIdeaUpdated::class => [
+            CategorizeIdea::class
+        ],
     ];
-
     /**
      * Register any events for your application.
      *

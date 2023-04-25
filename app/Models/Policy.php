@@ -24,7 +24,10 @@ class Policy extends Model
         'user_id',
         'approval',
         'approver_id',
-        'comment'
+        'comment',
+        'policy_id',
+        'publisher_id',
+        'published_at'
     ];
 
     public function shortDetails()
@@ -43,4 +46,18 @@ class Policy extends Model
     public function approver(){
         return $this->belongsTo('App\Models\User', 'approver_id');
     }
+
+    public function incrementPolicyViews() {
+        $this->views++;
+        return $this->save();
+    }
+
+    public function discussion(){
+        return $this->hasMany('App\Models\Discussion');
+    }
+
+    public function publisher(){
+        return $this->belongsTo('App\Models\User', 'publisher_id');
+    }
+
 }

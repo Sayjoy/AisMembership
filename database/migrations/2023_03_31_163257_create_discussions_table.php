@@ -15,6 +15,10 @@ class CreateDiscussionsTable extends Migration
     {
         Schema::create('discussions', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('policy_id')->constrained()->onDelete('cascade');
+            $table->foreignId('user_id')->constrained();
+            $table->foreignId('parent_id')->nullable()->constrained('discussions')->onDelete('cascade');
+            $table->longText('reply');
             $table->timestamps();
         });
     }

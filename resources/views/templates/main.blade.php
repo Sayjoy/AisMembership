@@ -29,6 +29,9 @@
                   <li class="nav-item">
                     <a class="nav-link" href="{{ url('/policy-ideas')}}">Policy Ideas</a>
                   </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="{{ route('policies.published')}}">Published Policies</a>
+                  </li>
                 </ul>
               </div>
 
@@ -37,7 +40,7 @@
                     @if (Route::has('login'))
                     <div>
                         @auth
-                            <a href="{{ route('user.profile') }}">Profile</a>
+                            <a href="{{ route('user.profile.show', auth()->User()->id) }}">Profile</a>
                             <a href="{{ route('logout') }}"
                                 onclick="event.preventDefault();
                                         document.getElementById('logout-form').submit()">
@@ -80,6 +83,9 @@
                   <li class="nav-item">
                     <a class="nav-link" href="{{ route('policy.ideas.index')}}">Submited Ideas</a>
                   </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="{{ route('policy.category.index')}}">Policy Categories</a>
+                  </li>
                   @endcan
                 </ul>
               </div>
@@ -92,4 +98,5 @@
             @yield('content')
         </main>
     </body>
+
 </html>

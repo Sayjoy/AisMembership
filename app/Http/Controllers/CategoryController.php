@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use Illuminate\Http\Request;
 
 class CategoryController extends Controller
@@ -13,7 +14,9 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        //
+        return view ('category.index',[
+            'categories' => Category::all()
+        ]);
     }
 
     /**
@@ -23,7 +26,7 @@ class CategoryController extends Controller
      */
     public function create()
     {
-        //
+        return view ('category.create');
     }
 
     /**
@@ -34,7 +37,10 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        Category::create($request->except('_token'));
+        $request->session()->flash('success', 'Category created successfully');
+
+        return redirect(route('policy.category.index'));
     }
 
     /**
@@ -56,7 +62,7 @@ class CategoryController extends Controller
      */
     public function edit($id)
     {
-        //
+        return view ('category.edit', ['category' => Category::findOrFail($id)]);
     }
 
     /**
@@ -68,7 +74,9 @@ class CategoryController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        Category::findOrFail($id)->update($request->except('_token'));
+
+        return redirect(route('policy.category.index'));
     }
 
     /**
@@ -77,8 +85,10 @@ class CategoryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($id, Request $request)
     {
-        //
+        Category::destroy($id);
+        $request->session()->flash('success', 'You have deleted the Category');
+        return redirect(route('policy.category.index'));
     }
 }
