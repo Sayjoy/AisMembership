@@ -3,9 +3,9 @@
 @section('content')
     <h1>Edit Member Details</h1>
     <div class="card">
-    <form method="POST" action="{{route('admin.users.update', $user->id)}}">
+    <form method="POST" enctype="multipart/form-data" action="{{route('admin.users.update', $user->id)}}">
        @method('PATCH')
-        @include('admin.users.partials.form')
+       @include('auth.partials.form', ['actor' => 'admin', 'action' => 'edit'])
     </form>
     </div>
 @endsection

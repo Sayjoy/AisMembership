@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Password;
 use Tariq86\CountryList\CountryList;
 use App\Events\NewUserCreated;
+use App\Helpers\UploadImage;
 
 class UserController extends Controller
 {
@@ -31,7 +32,7 @@ class UserController extends Controller
             dd('no access allowed');
         }
 
-        if (Gate::allows('is-admin')){
+        if (Gate::allows('is-admin')){b
             return view('admin.users.index', [
                 'users' => User::paginate(10),
             ]);
@@ -123,8 +124,16 @@ class UserController extends Controller
             return redirect(route('admin.users.index'));
         }
 
-        $user->update($request->except(['_token', 'roles']));
-        //$user->roles()->sync($request->roles);
+        if(!empty($request->picture)){
+            $imageName = UploadImage::upload($request->file('picture'));
+            $input = array_merge (
+                $request->except(['_token', 'roles']),
+                ["picture" => $imageName]);
+        }
+        else {
+            $input = $request->except(['_token', 'roles']);
+        }
+
         event(new NewUserCreated($user, $request->roles));
 
         $request->session()->flash('success', 'User updated successfully');

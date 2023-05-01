@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Laravel\Fortify\Contracts\CreatesNewUsers;
 use Stevebauman\Location\Facades\Location;
+use App\Helpers\UploadImage;
 
 class CreateNewUser implements CreatesNewUsers
 {
@@ -31,6 +32,8 @@ class CreateNewUser implements CreatesNewUsers
                 'max:255',
                 Rule::unique(User::class),
             ],
+            'phone' => ['required', 'string'],
+            'picture' => ['image','mimes:jpg,png,jpeg,gif,svg', 'max:2048'],
             'password' => $this->passwordRules(),
         ])->validate();
 
@@ -50,6 +53,13 @@ class CreateNewUser implements CreatesNewUsers
             $input['roles'][]=3;
         }
 
+        if($input['picture']){
+            $imageName = UploadImage::upload($input['picture']);
+        }
+        else {
+            $imageName = "";
+        }
+
         $user = User::create([
             'name' => $input['name'],
             'phone' => $input['phone'],
@@ -58,6 +68,7 @@ class CreateNewUser implements CreatesNewUsers
             'ip' => $input['ip'],
             'country' => $country,
             'password' => Hash::make($input['password']),
+            'picture' => $imageName,
         ]);
 
         event(new NewUserCreated($user, $input['roles']));

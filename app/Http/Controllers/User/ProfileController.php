@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Role;
 use Tariq86\CountryList\CountryList;
+use App\Helpers\UploadImage;
 
 class ProfileController extends Controller
 {
@@ -80,7 +81,28 @@ class ProfileController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $user = User::find($id);
+
+        if (!$user){
+            $request->session()->flash('error', 'User edit failed');
+            return redirect(route('admin.users.index'));
+        }
+
+        if(!empty($request->picture)){
+            $imageName = UploadImage::upload($request->file('picture'), $user->picture);
+
+            $input = array_merge (
+                $request->except(['_token', 'roles']),
+                ["picture" => $imageName]);
+        }
+        else {
+            $input = $request->except(['_token', 'roles']);
+        }
+
+        $user->update($input);
+
+        $request->session()->flash('success', 'Profile updated successfully');
+        return redirect(route('user.profile.show', $user->id));
     }
 
     /**

@@ -8,6 +8,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\File;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -25,6 +26,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'phone',
         'country',
         'password',
+        'picture'
     ];
 
     /**
@@ -92,5 +94,16 @@ class User extends Authenticatable implements MustVerifyEmail
     public function hasAnyRoles(array $roles)
     {
         return null !== $this->roles()->whereIn('name', $roles)->first();
+    }
+
+    public function profilePhoto()
+    {
+        if (File::isFile(public_path($this->picture)))
+        {
+            return $this->picture;
+        }
+        else {
+            return "/images/profilepics/avartar.jpg";
+        }
     }
 }

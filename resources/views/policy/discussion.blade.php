@@ -3,24 +3,6 @@
 @section('content')
 
 <section class="content">
-    {{--  <div class="container">
-        <div class="row">
-            <div class="col-lg-8 col-xs-12 col-md-8">
-                <div class="pull-left"><a href="http://forum.azyrusthemes.com/index.html#" class="prevnext"><i class="fa fa-angle-left"></i></a></div>
-                <div class="pull-left">
-                    <ul class="paginationforum">
-                        <li class="hidden-xs"><a href="http://forum.azyrusthemes.com/index.html#">1</a></li>
-                        <li class="hidden-xs hidden-md"><a href="http://forum.azyrusthemes.com/index.html#">11</a></li>
-                        <li class="hidden-xs hidden-sm hidden-md"><a href="http://forum.azyrusthemes.com/index.html#">13</a></li>
-                        <li><a href="http://forum.azyrusthemes.com/index.html#">1586</a></li>
-                    </ul>
-                </div>
-                <div class="pull-left"><a href="http://forum.azyrusthemes.com/index.html#" class="prevnext last"><i class="fa fa-angle-right"></i></a></div>
-                <div class="clearfix"></div>
-            </div>
-        </div>
-    </div>  --}}
-
 
     <div class="container">
         <div class="row">
@@ -38,7 +20,7 @@
                             <div class="userinfo pull-left">
                                 @php
                                 if ($idea->user_id){
-                                    $icon = '/images/icon6.jpg';
+                                    $icon = $idea->user->profilePhoto();
                                     $status = "Member";
                                     $user_roles = "";
                                     foreach ($idea->user->roles as $role){
@@ -47,14 +29,15 @@
 
                                 }
                                 else {
-                                    $icon = '/images/icon4.jpg';
+                                    $icon = '/images/profilepics/avartar.jpg';
                                     $status = "Guest";
                                     $user_roles = "";
                                 }
 
                             @endphp
                             <div class="avatar">
-                                <img src="{{url('/images/avatar.jpg')}}" alt=""
+                                <img src="{{$icon}}" alt=""
+                                class="img-fluid"
                                 tabindex="0"
                                 data-bs-trigger="focus"
                                 data-bs-toggle="popover"
@@ -64,9 +47,9 @@
 
                                 </div>
 
-                                <div class="icons">
+                                {{--  <div class="icons">
                                     <img src="{{url('/images/icon1.jpg')}}" alt=""><img src="{{url('/images/icon4.jpg')}}" alt="">
-                                </div>
+                                </div>  --}}
                             </div>
                             <div class="posttext pull-left">
                                 <h2><a href="{{ route('policy.show', $idea->id)}}">{{$idea->title}}</a></h2>

@@ -1,10 +1,13 @@
 @extends('templates.main')
 
 @section('content')
+    {{--  User self registrations  --}}
     <h1>Register</h1>
-    <form method="POST" action="{{route('register')}}">
+    <form method="POST" enctype="multipart/form-data" action="{{route('register')}}">
         @csrf
-        <div class="mb-3">
+
+        @include('auth.partials.form', ['actor' => 'self', 'action' => 'register', 'ipAddress' => $ipAddress])
+        {{--  <div class="mb-3">
           <label for="name" class="form-label">name</label>
           <input name="name" type="text" class="form-control @error('name') is-invalid @enderror" id="name" aria-describedby="name" value="{{old('name')}}">
           @error('name')
@@ -53,6 +56,6 @@
           </div>
 
           <input type="hidden" name="ip" value="{{$ipAddress}}">
-        <button name="submit" type="submit" class="btn btn-primary">Submit</button>
+        <button name="submit" type="submit" class="btn btn-primary">Submit</button>  --}}
       </form>
 @endsection

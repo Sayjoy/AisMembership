@@ -12,7 +12,7 @@
                         <div class="userinfo pull-left">
                             @php
                                 if ($policy->user_id){
-                                    $icon = '/images/icon6.jpg';
+                                    $icon = $policy->user->profilePhoto();
                                     $status = "Member";
                                     $user_roles = "";
                                     foreach ($policy->user->roles as $role){
@@ -21,14 +21,15 @@
 
                                 }
                                 else {
-                                    $icon = '/images/icon4.jpg';
+                                    $icon = '/images/profilepics/avartar.jpg';
                                     $status = "Guest";
                                     $user_roles = "";
                                 }
 
                             @endphp
                             <div class="avatar">
-                                <img src="{{url('/images/avatar.jpg')}}" alt=""
+                                <img src="{{$icon}}" alt=""
+                                class="img-fluid"
                                 tabindex="0"
                                 data-bs-trigger="focus"
                                 data-bs-toggle="popover"
@@ -38,7 +39,7 @@
                             </div>
 
                             <div class="icons">
-                                <img src="{{url($icon)}}" alt="">
+
                                 {{--  <img src="{{url('/images/icon1.jpg')}}" alt="">
                                 <img src="{{url('/images/icon4.jpg')}}" alt="">
                                 <img src="{{url('/images/icon5.jpg')}}" alt="">
@@ -107,7 +108,8 @@
                                 @endphp
 
                                 <div class="avatar">
-                                    <img src="{{url('/images/avatar.jpg')}}" alt=""
+                                    <img src="{{Auth::user()->profilePhoto()}}" alt=""
+                                    class="img-fluid"
                                     tabindex="0"
                                     data-bs-trigger="focus"
                                     data-bs-toggle="popover"
@@ -117,7 +119,7 @@
                                 </div>
 
                                 <div class="icons">
-                                    <img src="{{url('/images/icon6.jpg')}}" alt="">
+                                    {{--  <img src="{{url('/images/icon6.jpg')}}" alt="">  --}}
                                 </div>
                             </div>
                             <div class="posttext pull-left">
@@ -172,7 +174,8 @@
                                 @endphp
 
                                 <div class="avatar">
-                                    <img src="{{url('/images/avatar.jpg')}}" alt=""
+                                    <img src="{{$discussion->user->profilePhoto()}}" alt=""
+                                    class="img-fluid"
                                     tabindex="0"
                                     data-bs-trigger="focus"
                                     data-bs-toggle="popover"
@@ -182,7 +185,7 @@
                                 </div>
 
                                 <div class="icons">
-                                    <img src="{{url('/images/icon6.jpg')}}" alt="">
+                                    {{--  <img src="{{url('/images/icon6.jpg')}}" alt="">  --}}
                                 </div>
                             </div>
                             <div class="posttext pull-left">
