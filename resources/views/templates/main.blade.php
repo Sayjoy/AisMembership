@@ -86,6 +86,12 @@
                   <li class="nav-item">
                     <a class="nav-link" href="{{ route('policy.category.index')}}">Policy Categories</a>
                   </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="{{ route('poll.entity.create')}}">Create Poll</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="{{ route('poll.entity.index')}}">Poll List</a>
+                  </li>
                   @endcan
                 </ul>
               </div>

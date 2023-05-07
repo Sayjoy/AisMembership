@@ -67,6 +67,17 @@ Route::get('/policies-published', 'PolicyController@publishedPolicies')->name('p
 Route::get('/policies-published/{category_id}', 'PolicyController@publishedPolicies')->name('policies.published.byCategory');
 Route::get('/policy-published/{policy_id}', 'PolicyController@showPublished')->name('policy.published');
 
+//POll for admin and moderators
+Route::prefix('poll')->name('poll.')->middleware(['auth', 'verified', 'auth.isAdmin.Moderator'])->group(function()
+{
+    Route::resource('/entity', PollController::class);
+    Route::resource('/questions', PollElementController::class)->except('create', 'edit');
+    Route::get('/create/questions/{poll_id}/{q_no}', 'PollElementController@create')->name('questions.create');
+    Route::get('/edit/questions/{poll_id}/{q_no?}', 'PollElementController@edit')->name('questions.edit');
+});
+
+
+
 /*
 Route::get('send-mail', function () {
     $details = [
