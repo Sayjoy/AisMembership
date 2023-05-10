@@ -11,7 +11,6 @@ class Poll extends Model
 
     protected $fillable = [
         'name',
-        'total',
         'user_id',
         'status'
     ];
@@ -32,5 +31,17 @@ class Poll extends Model
             return "Active";
         else
             return "Inactive";
+    }
+
+    public function totalVote()
+    {
+        $total = 0;
+
+        foreach($this->questions as $question)
+        {
+            $total += $question->responder->count();
+        }
+
+        return $total;
     }
 }

@@ -9,6 +9,7 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\File;
+use App\Models\Poll;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -74,6 +75,14 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany('App\Models\Discussion');
     }
 
+    public function pollPublisher(){
+        return $this->hasMany('App\Models\Poll');
+    }
+
+    public function pollResponder(){
+        return $this->hasMany('App\Models\PollElement');
+    }
+
     /*
     *Check if the user has a role
     *@param string $role
@@ -105,5 +114,16 @@ class User extends Authenticatable implements MustVerifyEmail
         else {
             return "/images/profilepics/avartar.jpg";
         }
+    }
+
+    public function respondedToPoll($poll_id){
+        $poll = Poll::findOrFail($poll_id);
+        foreach($poll->questions as $question){
+            if (in_array($this->id, $question->responder->pluck('id')->all())){
+                return True;
+            }
+        }
+
+        return false;
     }
 }

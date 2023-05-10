@@ -1,8 +1,10 @@
 <?php
 
 use Admin\UserController;
+use App\Http\Controllers\PollElementController;
 use User\ProfileController;
 use App\Models\Category;
+use App\Models\PollElement;
 use User\Profile;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
@@ -20,9 +22,7 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::get('/', function () {
-    return view('index');
-});
+Route::get('/', 'PolicyController@create');
 
 //user related pages
 Route::prefix('users')->middleware(['auth', 'verified'])->name('user.')->group(function(){
@@ -71,23 +71,14 @@ Route::get('/policy-published/{policy_id}', 'PolicyController@showPublished')->n
 Route::prefix('poll')->name('poll.')->middleware(['auth', 'verified', 'auth.isAdmin.Moderator'])->group(function()
 {
     Route::resource('/entity', PollController::class);
-    Route::resource('/questions', PollElementController::class)->except('create', 'edit');
+    Route::resource('/questions', PollElementController::class)->except('create', 'edit', 'submitPoll');
     Route::get('/create/questions/{poll_id}/{q_no}', 'PollElementController@create')->name('questions.create');
     Route::get('/edit/questions/{poll_id}/{q_no?}', 'PollElementController@edit')->name('questions.edit');
 });
 
-
-
-/*
-Route::get('send-mail', function () {
-    $details = [
-    'title' => 'Mail from ItSolutionStuff.com',
-    'body' => 'This is for testing email using smtp',
-    'subject' => 'First test mail',
-    'view' => 'mail.test-mail',
-    ];
-    Mail::to("hello@example.com")->send(new SendMail($details));
-    dd("Email is Sent.");
+//Poll for members
+Route::prefix('poll')->name('poll.')->middleware(['auth', 'verified'])->group(function()
+{
+    Route::POST('/submit', 'PollElementController@submitPoll')->name('submit');
 });
 
-*/

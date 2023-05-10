@@ -20,5 +20,8 @@ class DatabaseSeeder extends Seeder
         $this->call(PolicySeeder::class);
         $this->call(CategorySeeder::class);
         $this->call(CategoryPolicySeeder::class);
+        $this->call(PollSeeder::class);
+        $this->call(PollElementSeeder::class);
+        $this->call(PollElementUserSeeder::class);
     }
 }

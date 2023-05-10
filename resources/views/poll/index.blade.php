@@ -15,7 +15,7 @@
                 <th scope="col">Id</th>
                 <th scope="col">Name</th>
                 <th scope="col">Questions</th>
-                <th scope="col">Total Ans</th>
+                <th scope="col">Votes</th>
                 <th scope="col">Author</th>
                 <th scope="col">Status</th>
                 <th scope="col">Action</th>
@@ -28,7 +28,7 @@
                     <th scope="row">{{++$i}}</th>
                     <td><a href="{{ route('poll.entity.show', $poll->id)}}">{{$poll->name}}</a></td>
                     <td>{{$poll->questions->count()}}</td>
-                    <td>{{$poll->total}}</td>
+                    <td>{{$poll->totalVote()}}</td>
                     <td>{{$poll->author->name}}</td>
                     <td>{{$poll->state()}}</td>
                     <td><a class="btn btn-sm btn-primary" href="{{route('poll.entity.edit', $poll->id)}}" role="Button">Edit</a>

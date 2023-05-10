@@ -6,6 +6,8 @@ use App\Models\PollElement;
 use App\Models\Poll;
 use App\Http\Requests\StorePollElementRequest;
 use App\Http\Requests\UpdatePollElementRequest;
+use App\Http\Requests\StoreSubmittedPollRequest;
+use Illuminate\Http\Request;
 
 class PollElementController extends Controller
 {
@@ -136,5 +138,18 @@ class PollElementController extends Controller
     public function destroy(PollElement $pollElement)
     {
         //
+    }
+
+    public function submitPoll(StoreSubmittedPollRequest $request){
+        if ($request->user()->respondedToPoll($request->poll_id)){
+            $request->session()->flash('error', 'You have participated in this poll before.');
+        }
+        else {
+            $item = PollElement::findOrFail($request->quest);
+            $item->responder()->attach($request->user()->id);
+            $request->session()->flash('success', 'Thank you, your poll has been taken');
+        }
+
+        return back();
     }
 }

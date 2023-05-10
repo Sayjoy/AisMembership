@@ -74,11 +74,9 @@
 
             </div>
             <div class="col-lg-4 col-md-4">
-
                 <!-- Sidebar -->
                     @include('policy.partials.sidebar')
                 <!-- Sidebar -->
-
             </div>
         </div>
     </div>

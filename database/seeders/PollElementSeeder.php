@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
+use App\Models\PollElement;
 
 class PollElementSeeder extends Seeder
 {
@@ -13,6 +14,6 @@ class PollElementSeeder extends Seeder
      */
     public function run()
     {
-        //
+        PollElement::factory()->times(30)->create();
     }
 }
