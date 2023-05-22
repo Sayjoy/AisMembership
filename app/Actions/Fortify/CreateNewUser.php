@@ -53,7 +53,7 @@ class CreateNewUser implements CreatesNewUsers
             $input['roles'][]=3;
         }
 
-        if($input['picture']){
+        if(isset($input['picture'])){
             $imageName = UploadImage::upload($input['picture']);
         }
         else {
