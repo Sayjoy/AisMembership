@@ -10,6 +10,8 @@ use App\Models\Category;
 use Illuminate\Http\Request;
 use App\Events\NewPolicyIdeaSubmitted;
 use App\Events\PolicyIdeaUpdated;
+use App\Events\PolicyIdeaStatusUpdated;
+use App\Events\PolicyPublishedStatus;
 use App\Models\Discussion;
 use Cookie;
 use Carbon\Carbon;
@@ -154,9 +156,21 @@ class PolicyController extends Controller
         if ($request->action){
             $action = True;
             $p_id = 'P-'.date('ymd').$policy->id;
+            $message = "<p>Congratulations! Your Policy idea has been approved for discussion with the policy id $p_id on the NNDCA forum</p>
+            <p>Reason for approval: $request->comment</p>
+            <p>Further actions are:
+                <ul>
+                    <li>Our moderators will review member comments and modify your idea accordingly until it becomes a full blown policy.</li>
+                    <li>After this, the policy will be published to the public.</li>
+                </ul>
+            </p>";
         } else {
             $action = False;
             $p_id = Null;
+            $message = "Our moderators have reviewed your idea submission and did not find it to comply with NNDCA's vision.
+            We are sorry to decline your submission
+            <p>Reason for declining: $request->comment</p>
+            ";
         }
 
         $policy->update([
@@ -166,6 +180,8 @@ class PolicyController extends Controller
             'approver_id' => $request->user()->id,
             'policy_id' => $p_id,
         ]);
+
+        event(new PolicyIdeaStatusUpdated($policy, $message));
 
         $request->session()->flash('success', 'Policy '.$request->submit.'d');
         return (redirect(route('policy.ideas.index')));
@@ -184,6 +200,8 @@ class PolicyController extends Controller
                 'view' => 0
             ]);
             $action = "unpublished";
+            $message = "Your policy $policy->policy_id was unpublished and has been removed from public access.
+            This may be due to a need to re-evaluate the policy. Kindly contact NNDCA admin for more information.";
         }
         else {
             //Publish post.
@@ -193,7 +211,12 @@ class PolicyController extends Controller
                 'view' => 0
             ]);
             $action = "published";
+            $message = "Congratulations, your policy, $policy->policy_id has been published.
+            This means it is now available for public access. Checkout the published policy at
+            ".url('policy-published/'.$policy->id);
         }
+
+        event(new PolicyPublishedStatus($policy, $message));
 
         $request->session()->flash('success', 'Policy '.$action.' Succesful');
         return redirect()->route ('policy.show', $policy->id);

@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Event;
 use App\Events\NewUserCreated;
 use App\Events\NewPolicyIdeaSubmitted;
 use App\Events\PolicyIdeaUpdated;
+use App\Events\PolicyIdeaStatusUpdated;
+use App\Events\PolicyPublishedStatus;
 use App\Listeners\AssignRoles;
 use App\Listeners\CategorizeIdea;
 use App\Listeners\SendEmailNotificationToIdeaOwner;
@@ -35,6 +37,12 @@ class EventServiceProvider extends ServiceProvider
         ],
         PolicyIdeaUpdated::class => [
             CategorizeIdea::class
+        ],
+        PolicyIdeaStatusUpdated::class => [
+            SendEmailNotificationToIdeaOwner::class,
+        ],
+        PolicyPublishedStatus::class => [
+            SendEmailNotificationToIdeaOwner::class,
         ],
     ];
     /**

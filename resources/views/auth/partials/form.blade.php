@@ -33,7 +33,7 @@
 @if ($action == "register" || $actor == "admin")
 {{--  Emails are only available at registration or id an admin editing the page.  --}}
     <div class="mb-3">
-        <label for="email" class="form-label">Email Address</label>
+        <label for="email" class="form-label">Email Address (Use a valid Email, a validation link will be sent to the email you provide) </label>
         <input name="email" type="email" class="form-control @error('email') is-invalid @enderror" id="email" aria-describedby="email"
                 value="{{old('email')}}@isset($user){{ $user->email}}@endisset">
         @error('email')
