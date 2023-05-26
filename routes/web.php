@@ -52,10 +52,10 @@ Route::prefix('policy')->name('policy.')->middleware(['auth', 'verified', 'auth.
     Route::get('/bycategory/{category_id}', 'PolicyController@index')->name('byCategory');
 });
 
-//Policy protected routes for registered users only
-Route::get('/policy/{policy_id}', 'PolicyController@show')->middleware('auth')->name('policy.show');
+//Policy protected routes for registered and verified users only
+Route::get('/policy/{policy_id}', 'PolicyController@show')->middleware('auth', 'verified')->name('policy.show');
 
-Route::prefix('discuss')->name('discuss.')->middleware('auth')->group(function(){
+Route::prefix('discuss')->name('discuss.')->middleware('auth', 'verified')->group(function(){
     Route::resource('/', DiscussionController::class);
     Route::get('/bycategory/{category_id}', 'DiscussionController@byCategory')->name('byCategory');
 });
