@@ -1,11 +1,20 @@
 @extends('templates.main')
 
 @section('content')
+    @php
+        if(isset($workgroup))
+            $heading = "of ".$workgroup->name;
+        else
+            $heading = "";
+    @endphp
 
     <div class="row">
         <div class="col-12">
-            <h1 class="btm_margin float-start">Users</h1>
-            <a class="btn btn-sm btn-success float-end" href="{{route('admin.users.create')}}" role="Button">Create</a>
+            <h1 class="btm_margin float-start">Users {{$heading}}</h1>
+            <div class="float-end">
+                <a class="btn btn-sm btn-secondary" href="{{route('admin.export.excel')}}" role="Button">Export as Excel</a>
+                <a class="btn btn-sm btn-success" href="{{route('admin.users.create')}}" role="Button">Create</a>
+            </div>
         </div>
     </div>
 
@@ -16,6 +25,7 @@
                 <th scope="col">Id</th>
                 <th scope="col">Name</th>
                 <th scope="col">Email</th>
+                <th scope="col">Education</th>
                 <th scope="col">Phone Number</th>
                 <th scope="col">Country</th>
                 <th scope="col">Roles</th>
@@ -23,11 +33,12 @@
               </tr>
             </thead>
             <tbody>
-                @foreach ($users as $user)
+                @foreach ($users as $key => $user)
                 <tr>
-                    <th scope="row">{{$user->id}}</th>
-                    <td>{{$user->name}}</td>
+                    <th scope="row">{{$users->firstItem() + $key}}</th>
+                    <td><a href="{{route('user.profile.show', $user->id)}}">{{$user->name}}</a></td>
                     <td>{{$user->email}}</td>
+                    <td>{{$user->highestEducation()}}</td>
                     <td>{{$user->phone}}</td>
                     <td>{{$user->country}}</td>
                     <td>@foreach ($user->roles as $role)

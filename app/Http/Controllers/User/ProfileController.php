@@ -6,8 +6,10 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Role;
+use App\Models\Workgroup;
 use Tariq86\CountryList\CountryList;
 use App\Helpers\UploadImage;
+use App\Events\NewUserCreated;
 
 class ProfileController extends Controller
 {
@@ -68,7 +70,8 @@ class ProfileController extends Controller
         return view ('user.edit', [
             'user' => User::findOrFail($id),
             'countries'=>$countries,
-            'roles'=>Role::all()
+            'roles'=>Role::all(),
+            'workgroups' => Workgroup::all(),
         ]);
     }
 
@@ -96,10 +99,12 @@ class ProfileController extends Controller
                 ["picture" => $imageName]);
         }
         else {
-            $input = $request->except(['_token', 'roles']);
+            $input = $request->except(['_token', 'roles', 'workgroup']);
         }
 
         $user->update($input);
+
+        event(new NewUserCreated($user, [], $request->workgroup));
 
         $request->session()->flash('success', 'Profile updated successfully');
         return redirect(route('user.profile.show', $user->id));

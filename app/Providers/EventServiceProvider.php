@@ -12,6 +12,7 @@ use App\Events\PolicyIdeaUpdated;
 use App\Events\PolicyIdeaStatusUpdated;
 use App\Events\PolicyPublishedStatus;
 use App\Listeners\AssignRoles;
+use App\Listeners\AssignWorkgroups;
 use App\Listeners\CategorizeIdea;
 use App\Listeners\SendEmailNotificationToIdeaOwner;
 use App\Listeners\SendEmailNotificationToModerators;
@@ -29,6 +30,7 @@ class EventServiceProvider extends ServiceProvider
         ],
         NewUserCreated::class => [
             AssignRoles::class,
+            AssignWorkgroups::class,
         ],
         NewPolicyIdeaSubmitted::class => [
             CategorizeIdea::class,

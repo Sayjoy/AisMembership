@@ -20,6 +20,13 @@ class User extends Authenticatable implements MustVerifyEmail
      *
      * @var array<int, string>
      */
+    public $educationLevels = [
+        1 => "Primary School Certificate",
+        2 => "Secondary School Certificate",
+        3 => "First degree",
+        4 => "Masters degree",
+        5 => "PhD",
+    ];
     protected $fillable = [
         'name',
         'email',
@@ -27,7 +34,9 @@ class User extends Authenticatable implements MustVerifyEmail
         'phone',
         'country',
         'password',
-        'picture'
+        'picture',
+        'education',
+        'expertise'
     ];
 
     /**
@@ -57,6 +66,11 @@ class User extends Authenticatable implements MustVerifyEmail
     public function roles()
     {
         return $this->belongsToMany('App\Models\Role');
+    }
+
+    public function workgroups()
+    {
+        return $this->belongsToMany('App\Models\Workgroup');
     }
 
     public function policy(){
@@ -125,5 +139,14 @@ class User extends Authenticatable implements MustVerifyEmail
         }
 
         return false;
+    }
+
+    public function highestEducation(){
+        foreach($this->educationLevels as $key => $value){
+            if ($this->education == $key){
+                return $value;
+            }
+        }
+        return "";
     }
 }

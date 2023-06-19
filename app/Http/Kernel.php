@@ -50,6 +50,8 @@ class Kernel extends HttpKernel
      * The application's route middleware.
      *
      * These middleware may be assigned to groups or used individually.
+     * To use Redis limiter
+     * 'throttle' =>  ThrottleRequestWithRedis::class,
      *
      * @var array<string, class-string|string>
      */
@@ -67,4 +69,5 @@ class Kernel extends HttpKernel
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
     ];
+
 }

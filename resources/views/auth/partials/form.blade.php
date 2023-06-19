@@ -20,6 +20,12 @@
 --}}
 
 @csrf
+
+@isset($user)
+    @php
+        $education = $user->educationLevels;
+    @endphp
+@endisset
 <div class="mb-3">
   <label for="name" class="form-label">name</label>
   <input name="name" type="text" class="form-control @error('name') is-invalid @enderror" id="name" aria-describedby="name"
@@ -31,7 +37,7 @@
   @enderror
 </div>
 @if ($action == "register" || $actor == "admin")
-{{--  Emails are only available at registration or id an admin editing the page.  --}}
+{{--  Emails are only available at registration or if an admin is editing the page.  --}}
     <div class="mb-3">
         <label for="email" class="form-label">Email Address (Use a valid Email, a validation link will be sent to the email you provide) </label>
         <input name="email" type="email" class="form-control @error('email') is-invalid @enderror" id="email" aria-describedby="email"
@@ -53,6 +59,53 @@
             {{$message}}
         </span>
     @enderror
+</div>
+
+<div class="mb-3">
+    <label for="education" class="form-label">Highest Educational Qualification</label>
+    <select name="education" class="form-control @error('education') is-invalid @enderror" id="education">
+        @foreach ($education as $key=>$value)
+           <option value="{{$key}}"
+            @if (old('education')==$value || isset($user->education)==$key)
+                selected
+            @endif
+            >{{$value}}</option>
+        @endforeach
+    </select>
+    @error('education')
+        <span class="invalid-feedback" role="alert">
+            {{$message}}
+        </span>
+    @enderror
+</div>
+
+<div class="mb-3">
+    <label for="phone" class="form-label">Areas of Expertise</label>
+    <input name="expertise" type="text" class="form-control @error('expertise') is-invalid @enderror" id="expertise" aria-describedby="expertise"
+            value="{{old('expertise')}}@isset($user){{ $user->expertise}}@endisset">
+    @error('expertise')
+        <span class="invalid-feedback" role="alert">
+            {{$message}}
+        </span>
+    @enderror
+</div>
+
+<div class="mb-3">
+    <label for="workgroup" class="form-label">Choose atleast one Workgroup</label>
+    @foreach ($workgroups as $workgroup)
+        <div class="form-check">
+            <input class="form-check-input" name="workgroup[]"
+                type="checkbox" value="{{$workgroup->id}}" id="{{$workgroup->name}}"
+                @isset($user)
+                    @if (in_array($workgroup->id, $user->workgroups->pluck('id')->toArray()))
+                        checked
+                    @endif
+                @endisset >
+            <label class="form-check-label" for="{{$workgroup->name}}">
+                {{$workgroup->name}}
+            </label>
+        </div>
+    @endforeach
 </div>
 
 @if ($actor == "self")
@@ -106,10 +159,15 @@
         <label for="country" class="form-label">Country</label>
         <select name="country" class="form-control @error('country') is-invalid @enderror" id="country">
             @foreach ($countries as $country)
-               <option value="{{ $country}}"
-                @if (old('country')==$country || isset($user->country)==$country)
+               <option value="{{$country}}"
+                @if (old('country')==$country)
                     selected
                 @endif
+                @isset($user)
+                    @if($user->country==$country)
+                        selected
+                    @endif
+                @endisset
                 >{{$country}}</option>
             @endforeach
         </select>

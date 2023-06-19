@@ -16,6 +16,7 @@ class NewUserCreated
 
     public $user;
     public $roles;
+    public $workgroups;
 
     /**
      * Create a new event instance.
@@ -23,10 +24,11 @@ class NewUserCreated
      *
      * @return void
      */
-    public function __construct($user, $roles)
+    public function __construct($user, $roles=[], $workgroups=[])
     {
         $this->user = $user;
         $this->roles = $roles;
+        $this->workgroups = $workgroups;
     }
 
     /**

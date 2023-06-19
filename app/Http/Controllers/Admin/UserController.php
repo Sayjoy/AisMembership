@@ -7,12 +7,15 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreUserRequest;
 use App\Models\User;
 use App\Models\Role;
+use App\Models\Workgroup;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Password;
 use Tariq86\CountryList\CountryList;
 use App\Events\NewUserCreated;
+use App\Exports\ExportUsers;
 use App\Helpers\UploadImage;
+use Maatwebsite\Excel\Facades\Excel;
 
 class UserController extends Controller
 {
@@ -50,8 +53,10 @@ class UserController extends Controller
     {
         $countryList = new CountryList();
         $countries = $countryList->getList();
-        return view('admin.users.create', ['roles'=>Role::all(),
-                    'countries'=>$countries]);
+        return view('admin.users.create', [
+            'roles'=>Role::all(),
+            'workgroups' => Workgroup::all(),
+            'countries'=>$countries]);
     }
 
     /**
@@ -70,8 +75,6 @@ class UserController extends Controller
 
         $newUser = new CreateNewUser();
         $user = $newUser->create($userData);
-
-        // $user->roles()->sync($request->roles);
 
         Password::sendResetLink($request->only(['email']));
 
@@ -104,6 +107,7 @@ class UserController extends Controller
             [
                 'roles'=>Role::all(),
                 'user'=>User::find($id),
+                'workgroups' => Workgroup::all(),
                 'countries'=>$countries
             ]);
     }
@@ -131,10 +135,12 @@ class UserController extends Controller
                 ["picture" => $imageName]);
         }
         else {
-            $input = $request->except(['_token', 'roles']);
+            $input = $request->except(['_token', 'roles', 'workgroup']);
         }
 
-        event(new NewUserCreated($user, $request->roles));
+        $user->update($input);
+
+        event(new NewUserCreated($user, $request->roles, $request->workgroup));
 
         $request->session()->flash('success', 'User updated successfully');
         return redirect(route('admin.users.index'));
@@ -151,5 +157,36 @@ class UserController extends Controller
         User::destroy($id);
         $request->session()->flash('success', 'You have deleted the User');
         return redirect(route('admin.users.index'));
+    }
+
+    public function export()
+    {
+        $users = User::all();
+        $data = [["Name", "Email", "Phone Number", "Country", "Education", "Expertise", "Role", "Workgroup"]];
+        foreach($users as $user)
+        {
+            $roles = "";
+            foreach ($user->roles as $role){
+                $roles.="$role->name, ";
+            }
+
+            $workgroups = "";
+            foreach ($user->workgroups as $workgroup){
+                $workgroups.="$workgroup->name, ";
+            }
+
+
+            $data[] = [$user->name,
+                        $user->email,
+                        $user->phone,
+                        $user->country,
+                        $user->highestEducation(),
+                        $user->expertise,
+                        $roles,
+                        $workgroups
+                    ];
+        }
+        $export = new ExportUsers($data);
+        return Excel::download($export, 'users.xlsx');
     }
 }

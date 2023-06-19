@@ -6,7 +6,7 @@ use App\Events\NewUserCreated;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 
-class AssignRoles
+class AssignWorkgroups
 {
     /**
      * Create the event listener.
@@ -21,12 +21,12 @@ class AssignRoles
     /**
      * Handle the event.
      *
-     * @param  \App\Events\NewUserCreated  $event
+     * @param  $event
      * @return void
      */
-    public function handle(NewUserCreated $event)
+    public function handle($event)
     {
-        if (!empty($event->roles))
-            $event->user->roles()->sync($event->roles);
+        if (!empty($event->workgroups))
+            $event->user->workgroups()->sync($event->workgroups);
     }
 }

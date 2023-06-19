@@ -78,6 +78,9 @@
                   <li class="nav-item">
                     <a class="nav-link" href="{{ route('admin.users.index')}}">Members</a>
                   </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="{{ route('admin.workgroup.index')}}">Workgroups</a>
+                  </li>
                   @endcan
                   @can('is-admin-moderator')
                   <li class="nav-item">

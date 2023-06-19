@@ -1,10 +1,9 @@
 <?php
 
 use Admin\UserController;
-use App\Http\Controllers\PollElementController;
 use User\ProfileController;
-use App\Models\Category;
-use App\Models\PollElement;
+use App\Models\User;
+use App\Models\Workgroup;
 use User\Profile;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
@@ -33,13 +32,21 @@ Route::prefix('users')->middleware(['auth', 'verified'])->name('user.')->group(f
 
 //Route::resource('/admin/users', 'Admin\UserController');//Old way
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'auth.isAdmin', 'verified'])->group(function(){
+    Route::get('/export/excel', 'Admin\UserController@export')->name('export.excel');
     Route::resource('/users', UserController::class);
+    Route::resource('workgroup', WorkgroupController::class);
 });
 
 //Overrides fortify register route
 //Add the middleware to prevent unauthorized country accessing the registration page.
+//Add educationLevels from User model
 Route::get('/register-form', function (Request $request) {
-    return view('auth.register', ['ipAddress'=>$request->ip()]);
+    $user = new User();
+    return view('auth.register', [
+        'ipAddress'=>$request->ip(),
+        'education'=>$user->educationLevels,
+        'workgroups' =>Workgroup::all()
+    ]);
 })->name('register-form')->middleware(['check.country']);
 
 
