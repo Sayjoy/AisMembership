@@ -27,7 +27,7 @@ class PollElement extends Model
 
     public function responder()
     {
-        return $this->belongsToMany('App\Models\user');
+        return $this->belongsToMany('App\Models\User');
     }
 
     public function percentageResponse()
